@@ -1,0 +1,44 @@
+---
+# add_gitlab_runner_repo_and_install_gitlab_runner/tasks/main.yml
+
+- name: 'Set facts on openSUSE'
+  ansible.builtin.set_fact:
+    gitlab_os: 'opensuse'
+    gitlab_version: "{{ ansible_distribution_version }}"
+    gitlab_repo_path: '/etc/zypp/repos.d'
+  when:
+    - ansible_distribution == 'openSUSE Leap'
+
+- name: 'Set facts on SLES'
+  ansible.builtin.set_fact:
+    gitlab_os: 'sles'
+    gitlab_version: "{{ ansible_distribution_version }}"
+    gitlab_repo_path: '/etc/zypp/repos.d'
+  when:
+    - ansible_distribution == 'SLES'
+
+- name: 'Set facts on RHEL and RHEL-Clones (Rocky Linux, Almalinux,...)'
+  ansible.builtin.set_fact:
+    gitlab_os: 'el'
+    gitlab_version: "{{ ansible_distribution_major_version }}"
+    gitlab_repo_path: '/etc/yum.repos.d'
+  when:
+    - '
+      ansible_distribution == "AlmaLinux"
+      or ansible_distribution == "CentOS"
+      or ansible_distribution == "RedHat"
+      or ansible_distribution == "Rocky"
+      '
+
+- name: 'Add official gitlab-runner RPM repository'
+  ansible.builtin.template:
+    src: runner_gitlab-runner.repo.j2
+    dest: "{{ gitlab_repo_path }}/runner_gitlab-runner.repo"
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+
+- name: 'Install gitlab-runner package'
+  ansible.builtin.package:
+    name: gitlab-runner
+    state: present
