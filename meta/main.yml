@@ -1,0 +1,25 @@
+galaxy_info:
+  role_name: 'add_gitlab_runner_repo_and_install_gitlab_runner'
+  namespace: 'johanneskastl'
+  author: 'Johannes Kastl'
+  description: 'Add the official gitlab-runner repository and install the gitlab-runner package'
+  company: 'B1 Systems GmbH'
+
+  license: 'BSD-3-Clause'
+
+  min_ansible_version: '2.12'
+
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: opensuse
+      versions:
+        - all
+    - name: SLES
+      versions:
+        - all
+
+  galaxy_tags: []
+
+dependencies: []
